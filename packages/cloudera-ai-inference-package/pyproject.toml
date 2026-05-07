@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling>=1.4.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cloudera_ai_inference_package"
+version = "0.0.1"
+description = "Cloudera AI Inference LangChain providers for Jupyter AI (jupyter_ai.model_providers entry points)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "BSD 3-Clause License" }
+dependencies = [
+  "jupyter-ai-magics>=2.31.6,<3",
+  "langchain>=0.3.0,<0.4.0",
+  "langchain-core>=0.3.0",
+  "requests>=2.28.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.entry-points."jupyter_ai.model_providers"]
+cloudera-ai-inference-language-model-provider = "cloudera_ai_inference_package.cloudera_ai_inference_provider:ClouderaAIInferenceLanguageModelProvider"
+
+[project.entry-points."jupyter_ai.embeddings_model_providers"]
+cloudera-ai-inference-embedding-model-provider = "cloudera_ai_inference_package.cloudera_ai_embedding_provider:ClouderaAIInferenceEmbeddingModelProvider"
+
+[tool.hatch.build.targets.wheel]
+packages = ["cloudera_ai_inference_package"]
