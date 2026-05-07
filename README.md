@@ -18,6 +18,21 @@ This branch tracks **upstream Jupyter AI v3** (`jupyterlab/jupyter-ai`) and keep
 
 **Chat models are chosen dynamically** in JupyterLab agent chat: Jupyter AI 3 serves the model list from **`jupyter_ai_litellm`** (`GET /api/ai/models/chat`), i.e. LiteLLM’s catalog. Users pick any model that API exposes.
 
+### Cloudera Copilot branding (this fork)
+
+Product copy and assistant identity match **Cloudera Copilot**, not generic “Jupyter AI” / “Jupyternaut” in user-visible strings where we control them:
+
+- **`packages/jupyter-ai-jupyternaut`** — Vendored from [`jupyter-ai-contrib/jupyter-ai-jupyternaut`](https://github.com/jupyter-ai-contrib/jupyter-ai-jupyternaut), version **0.0.12**, with Cloudera Copilot naming in the Lab UI, status bar, settings, inline completions label, and the **default persona** (`name="Cloudera Copilot"`) plus an updated **system prompt** intro. **`jupyter_ai_jupyternaut/static/cloudera-copilot.svg`** is served at **`/api/ai/static/cloudera-copilot.svg`** so **`jupyter-ai-magics`** `ClouderaCopilotPersona` avatars resolve. This fork **tracks a built** `jupyter_ai_jupyternaut/labextension/` in git (see package `.gitignore`); after changing TypeScript run `yarn install`, `./node_modules/.bin/tsc`, and `jupyter labextension build .` (or use a local venv with `jupyterlab` installed), then commit the updated `labextension/` and `lib/` outputs. Rebase when upgrading upstream.
+- **`packages/jupyter-ai-magics`** — Synced from [`cloudera/copilot`](https://github.com/cloudera/copilot) `main` (`packages/jupyter-ai-magics`), including **`CHAT_SYSTEM_PROMPT`** (“You are Cloudera Copilot…”) and **`ClouderaCopilotPersona`** for the `%%ai` path.
+
+**Engine / image installs** (pin your fork SHA): install **`jupyter-ai` 3.x** from PyPI, then override the persona stack and magics from this repo, for example:
+
+```text
+jupyter_ai_jupyternaut @ https://github.com/<org>/copilot/archive/<sha>.zip#subdirectory=packages/jupyter-ai-jupyternaut
+jupyter_ai_magics @ https://github.com/<org>/copilot/archive/<sha>.zip#subdirectory=packages/jupyter-ai-magics
+cloudera_ai_inference_package @ https://github.com/<org>/copilot/archive/<sha>.zip#subdirectory=packages/cloudera-ai-inference-package
+```
+
 ### Cloudera AI Inference (still supported)
 
 **`packages/cloudera-ai-inference-package`** registers Cloudera-hosted **language** and **embedding** providers via `jupyter_ai.model_providers` and `jupyter_ai.embeddings_model_providers`. Configure with **`COPILOT_CONFIG_DIR`** (JSON with **`aiInferenceModels`**: `name`, `endpoint`, …) and optionally **`COPILOT_EMBEDDING_CONFIG_DIR`**. Details: `packages/cloudera-ai-inference-package/README.md`.

@@ -1,0 +1,23 @@
+{
+  "name": "@jupyter-ai/magics",
+  "version": "2.31.6+cloudera",
+  "description": "Jupyter AI magics Python package. Not published on NPM.",
+  "private": true,
+  "homepage": "https://github.com/cloudera/copilot",
+  "bugs": {
+    "url": "https://github.com/cloudera/copilot/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "Cloudera, Inc."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cloudera/copilot.git"
+  },
+  "scripts": {
+    "dev-install": "pip install -e \".[dev,all]\"",
+    "dev-uninstall": "pip uninstall jupyter_ai_magics -y",
+    "install-from-src": "pip install ."
+  }
+}
