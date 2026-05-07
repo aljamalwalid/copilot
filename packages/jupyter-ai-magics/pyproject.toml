@@ -23,8 +23,9 @@ dynamic = ["version", "description", "authors", "urls", "keywords"]
 dependencies = [
     "ipython",
     "importlib_metadata>=5.2.0",
-    "langchain>=0.3.0,<0.4.0",
-    "langchain_community>=0.3.0,<0.4.0",
+    "langchain>=1.0.0,<2",
+    "langchain-core>=1.0.0,<2",
+    "langchain-community>=0.4.0,<0.5",
     # pydantic <2.10.0 raises a "protected namespaces" error in JAI
     # - See: https://docs.pydantic.dev/latest/api/config/#pydantic.config.ConfigDict.protected_namespaces
     "pydantic>=2.10.0,<3",
@@ -45,8 +46,7 @@ dev = [
 test = ["coverage", "pytest", "pytest-asyncio", "pytest-cov"]
 
 all = [
-    # `langchain_aws<0.2` is not compatible with LangChain v0.3
-    "langchain_aws>=0.2,<0.3",
+    "langchain-aws>=1.4.0,<2",
     "boto3",
 ]
 

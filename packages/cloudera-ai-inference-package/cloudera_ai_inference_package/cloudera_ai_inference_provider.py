@@ -8,10 +8,10 @@ from typing import Any, AsyncIterator, ClassVar, Dict, Iterator, List, Mapping, 
 
 from jupyter_ai_magics import BaseProvider
 from jupyter_ai_magics.providers import MultiEnvAuthStrategy
-from langchain.callbacks.manager import CallbackManagerForLLMRun
-from langchain.chat_models.base import SimpleChatModel
-from langchain.llms.base import LLM
+from langchain_core.callbacks.manager import CallbackManagerForLLMRun
 from langchain_core.language_models import LanguageModelInput
+from langchain_core.language_models.chat_models import SimpleChatModel
+from langchain_core.language_models.llms import LLM
 from langchain_core.messages import BaseMessage, BaseMessageChunk, HumanMessage, SystemMessage
 from langchain_core.messages.ai import AIMessageChunk
 from langchain_core.outputs import ChatGenerationChunk

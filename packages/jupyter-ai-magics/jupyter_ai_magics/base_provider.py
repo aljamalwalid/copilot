@@ -11,16 +11,16 @@ from typing import (
     Union,
 )
 
-from langchain.prompts import (
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.outputs import LLMResult
+from langchain_core.prompts import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
     MessagesPlaceholder,
     PromptTemplate,
     SystemMessagePromptTemplate,
 )
-from langchain.schema import LLMResult
-from langchain.schema.output_parser import StrOutputParser
-from langchain.schema.runnable import Runnable
+from langchain_core.runnables import Runnable
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.language_models.llms import BaseLLM
 from pydantic import BaseModel, ConfigDict

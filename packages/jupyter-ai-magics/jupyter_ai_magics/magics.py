@@ -14,9 +14,9 @@ from IPython.display import HTML, JSON, Markdown, Math
 from jupyter_ai_magics.aliases import MODEL_ID_ALIASES
 from jupyter_ai_magics.models.usage_tracking import UsageTracker
 from jupyter_ai_magics.utils import decompose_model_id, get_lm_providers
-from langchain.chains import LLMChain
-from langchain.schema import HumanMessage
-from langchain_core.messages import AIMessage
+from langchain_core.language_models import BaseLanguageModel
+from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.runnables import Runnable
 
 from ._version import __version__
 from .base_provider import BaseProvider
@@ -278,7 +278,8 @@ class AiMagics(Magics):
             return False
 
         ipython = self.shell
-        return name in ipython.user_ns and isinstance(ipython.user_ns[name], LLMChain)
+        obj = ipython.user_ns[name]
+        return isinstance(obj, Runnable) and not isinstance(obj, BaseLanguageModel)
 
     # Is this an acceptable name for an alias?
     def _validate_name(self, register_name):
@@ -301,7 +302,7 @@ class AiMagics(Magics):
             # Ensure that the destination is properly formatted
             if ":" not in target:
                 raise ValueError(
-                    "Target model must be an LLMChain object or a model name in PROVIDER_ID:MODEL_NAME format"
+                    "Target model must be a LangChain Runnable chain (not a bare model) or a model name in PROVIDER_ID:MODEL_NAME format"
                 )
 
             self.custom_model_registry[register_name] = target
@@ -457,7 +458,7 @@ class AiMagics(Magics):
 
     def _decompose_model_id(self, model_id: str):
         """Breaks down a model ID into a two-tuple (provider_id, local_model_id). Returns (None, None) if indeterminate."""
-        # custom_model_registry maps keys to either a model name (a string) or an LLMChain.
+        # custom_model_registry maps keys to either a model name (a string) or a Runnable chain.
         # If this is an alias to another model, expand the full name of the model.
         if model_id in self.custom_model_registry and isinstance(
             self.custom_model_registry[model_id], str
@@ -519,11 +520,15 @@ class AiMagics(Magics):
         provider_id, local_model_id = self._decompose_model_id(args.model_id)
 
         # If this is a custom chain, send the message to the custom chain.
-        if args.model_id in self.custom_model_registry and isinstance(
-            self.custom_model_registry[args.model_id], LLMChain
+        chain = self.custom_model_registry.get(args.model_id)
+        if chain is not None and isinstance(chain, Runnable) and not isinstance(
+            chain, BaseLanguageModel
         ):
             # Get the output, either as raw text or as the contents of the 'text' key of a dict
-            invoke_output = self.custom_model_registry[args.model_id].invoke(prompt)
+            try:
+                invoke_output = chain.invoke(prompt)
+            except TypeError:
+                invoke_output = chain.invoke({"input": prompt})
             if isinstance(invoke_output, dict):
                 invoke_output = invoke_output.get("text")
 

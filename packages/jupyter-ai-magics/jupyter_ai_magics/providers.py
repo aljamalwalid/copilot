@@ -7,9 +7,7 @@ from typing import (
     Optional,
 )
 
-from langchain.prompts import (
-    PromptTemplate,
-)
+from langchain_core.prompts import PromptTemplate
 from langchain_community.chat_models import QianfanChatEndpoint
 from langchain_community.llms import AI21, GPT4All, HuggingFaceEndpoint, Together
 
